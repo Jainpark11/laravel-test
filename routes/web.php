@@ -1,8 +1,16 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
+namespace App\Models;
+
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -29,21 +37,39 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 
 Route::get('/articles/create', function () {
     return view('articles/create');
 });
 
-Route::post('/articles', function (Request $request) {   
-    $request->validate([
-        'body' =>   ['required',
-                     'boolean',
-                     'max:255'
-                    ],
+Route::post('/articles', function (Request $request) {
+    $input = $request->validate([
+        'body' =>   [
+            'required',
+            'string',
+            'max:255'
+        ],
     ]);
-   
-    return 'hello';
+    Article::create([
+        'body' => $input['body'],
+        'user_id' => Auth::id()
+        
+    ]);
+    return 'Hello';
+
+});
+Route::get('articles', function () {   
+    $articles = Article::with('user')
+    ->latest()
+    ->paginate(); 
+    
+    return view('articles.index',
+                [ 'articles'=>$articles ]);
 });
 
+Route::get('articles/{article}',function(Article $article){
+    //$article = Article::find($id);
+    return view('articles.show', ['article'=>$article]);
+});
