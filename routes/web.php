@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,3 +35,15 @@ require __DIR__.'/auth.php';
 Route::get('/articles/create', function () {
     return view('articles/create');
 });
+
+Route::post('/articles', function (Request $request) {   
+    $request->validate([
+        'body' =>   ['required',
+                     'boolean',
+                     'max:255'
+                    ],
+    ]);
+   
+    return 'hello';
+});
+

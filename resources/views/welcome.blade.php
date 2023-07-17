@@ -36,7 +36,7 @@
                 </div>
             @endif
                 <div class="max=w=7xl mx-auto p-6 lg:p-8">
-                    간단한 소개
+                    간단한 글쓰기
                     <div>
                         <a href='/articles/create'>글쓰기</a>
                     </div>
